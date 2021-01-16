@@ -1,0 +1,23 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "APi project on Node Express and MongoDB",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Adesh66/NodeJS.git"
+  },
+  "author": "Adesh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Adesh66/NodeJS/issues"
+  },
+  "homepage": "https://github.com/Adesh66/NodeJS#readme"
+}
