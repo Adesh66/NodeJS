@@ -32,6 +32,23 @@ app.get("/getuser/:userID", async (req, res) => {
     res.status(500);
   }
 });
+app.put("/update_user/:userID", async (req, res) => {
+  try {
+    const userdata = await User.findByIdAndUpdate(
+      {
+        _id: req.params.userID,
+      },
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.send(userdata);
+  } catch (error) {
+    res.status(500);
+  }
+  console.log(req.body);
+});
 app.post("/create_user", async (req, res) => {
   try {
     const userData = new User(req.body);
