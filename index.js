@@ -3,6 +3,7 @@ const app = express();
 const port = 9096;
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const createError = require("http-errors");
 //databse connection
 require("./mongo");
 
@@ -13,9 +14,7 @@ const userRoute = require("./routes/User");
 app.use("/user", userRoute);
 
 app.use((req, res, next) => {
-  const err = new Error("Not Found");
-  err.status = 404;
-  next(err);
+  next(createError(400, "Not found"));
 });
 
 // error handle

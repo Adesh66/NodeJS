@@ -1,6 +1,7 @@
 const express = require("express");
-const { nextTick } = require("process");
+const mongoose = require("mongoose");
 const router = express.Router();
+const createError = require("http-errors");
 
 const User = require("../model/user");
 
@@ -9,30 +10,41 @@ router.get("/", async (req, res, next) => {
     const users = await User.find({}, { __v: 0 });
     res.send(users);
   } catch (error) {
-    res.status(500);
+    next(error);
   }
 });
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
     const userData = new User(req.body);
     await userData.save();
     res.send(userData);
   } catch (error) {
-    res.send({ message: error });
+    if (error.name === "ValidationError") {
+      next(createError(422, error.message));
+      return;
+    }
+    next(error);
   }
 });
 
-router.get("/:userID", async (req, res) => {
+router.get("/:userID", async (req, res, next) => {
   try {
     const user = await User.findOne({ _id: req.params.userID });
+    if (!user) {
+      throw createError(404, "user not exist");
+    }
     console.log(user);
     res.send(user);
   } catch (error) {
-    res.status(500);
+    if (error instanceof mongoose.CastError) {
+      next(createError(400, "Invalid product Id"));
+      return;
+    }
+    next(error);
   }
 });
 
-router.put("/:userID", async (req, res) => {
+router.put("/:userID", async (req, res, next) => {
   try {
     const userdata = await User.findByIdAndUpdate(
       {
@@ -43,21 +55,34 @@ router.put("/:userID", async (req, res) => {
         new: true,
       }
     );
+    if (!userdata) {
+      throw createError(404, "user does not exist");
+    }
     res.send(userdata);
   } catch (error) {
-    res.status(500);
+    if (error instanceof mongoose.CastError) {
+      next(createError(400, "Invalid user Id"));
+      return;
+    }
+    next(error);
   }
-  console.log(req.body);
 });
 
-router.delete("/:userID", async (req, res) => {
+router.delete("/:userID", async (req, res, next) => {
   try {
     const userdata = await User.findByIdAndRemove({
       _id: req.params.userID,
     });
+    if (!userdata) {
+      throw createError(404, "user does not exist");
+    }
     res.send(userdata);
   } catch (error) {
-    res.status(500);
+    if (error instanceof mongoose.CastError) {
+      next(createError(400, "Invalid user Id"));
+      return;
+    }
+    next(error);
   }
 });
 
