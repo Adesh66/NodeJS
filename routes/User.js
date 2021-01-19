@@ -33,7 +33,6 @@ router.get("/:userID", async (req, res, next) => {
     if (!user) {
       throw createError(404, "user not exist");
     }
-    console.log(user);
     res.send(user);
   } catch (error) {
     if (error instanceof mongoose.CastError) {

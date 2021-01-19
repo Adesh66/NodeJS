@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
-const port = 9096;
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const createError = require("http-errors");
+const dotenv = require("dotenv").config();
+
 //databse connection
 require("./mongo");
 
@@ -27,7 +28,8 @@ app.use((err, req, res, next) => {
     },
   });
 });
+const PORT = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`App is listening at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`App is listening at http://localhost:${PORT}`);
 });
